@@ -124,7 +124,7 @@ namespace MultiMediaProject
         // التحويل إلى نظام CMY (المستخدم للوصول لـ CMYK)
         private void button6_Click(object sender, EventArgs e)
         {
-          
+
 
             // 1. إنشاء صورة فارغة بنفس أبعاد الصورة الأصلية لتخزين النتيجة
             Bitmap cmyImage = new Bitmap(originalImage);
@@ -155,6 +155,109 @@ namespace MultiMediaProject
 
             // 3. عرض النتيجة في الـ PictureBox
             pictureBox1.Image = cmyImage;
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            Bitmap newImage = new Bitmap(originalImage.Width, originalImage.Height);
+
+            for (int y = 0; y < originalImage.Height; y++)
+            {
+                for (int x = 0; x < originalImage.Width; x++)
+                {
+
+                    Color pixel = originalImage.GetPixel(x, y);
+
+                    //Color newColor = Color.FromArgb(pixel.R, 0, pixel.B);
+                    Color newColor = Color.FromArgb(0, pixel.G, pixel.B);
+                    //Color newColor = Color.FromArgb(pixel.R,pixel.G , 0);
+
+                    newImage.SetPixel(x, y, newColor);
+                }
+            }
+            pictureBox1.Image = newImage;
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            Bitmap brightImage = new Bitmap(originalImage.Width, originalImage.Height);
+
+            int brightness = trackBar1.Value;
+
+            for (int y = 0; y < originalImage.Height; y++)
+            {
+                for (int x = 0; x < originalImage.Width; x++)
+                {
+                    Color pixel = originalImage.GetPixel(x, y);
+
+                    
+                    int r = pixel.R + brightness;
+                    int g = pixel.G + brightness;
+                    int b = pixel.B + brightness;
+
+                    r = Math.Max(0, Math.Min(255, r));
+                    g = Math.Max(0, Math.Min(255, g));
+                    b = Math.Max(0, Math.Min(255, b));
+
+                    Color newColor = Color.FromArgb(r, g, b);
+
+                    brightImage.SetPixel(x, y, newColor);
+                }
+            }
+
+            pictureBox1.Image = brightImage;
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            
+            Bitmap redImage = new Bitmap(originalImage.Width, originalImage.Height);
+            Bitmap greenImage = new Bitmap(originalImage.Width, originalImage.Height);
+            Bitmap blueImage = new Bitmap(originalImage.Width, originalImage.Height);
+
+            
+            for (int y = 0; y < originalImage.Height; y++)
+            {
+                for (int x = 0; x < originalImage.Width; x++)
+                {
+                  
+                    Color pixel = originalImage.GetPixel(x, y);
+
+                  
+                    int r = pixel.R;
+                    int g = pixel.G;
+                    int b = pixel.B;
+
+                    Color redColor = Color.FromArgb(r, 0, 0);
+                    Color greenColor = Color.FromArgb(0, g, 0);
+                    Color blueColor = Color.FromArgb(0, 0, b);
+
+              
+                    redImage.SetPixel(x, y, redColor);
+                    greenImage.SetPixel(x, y, greenColor);
+                    blueImage.SetPixel(x, y, blueColor);
+                }
+            }
+
+         
+            pictureBox2.Image = redImage;
+            pictureBox3.Image = greenImage;
+            pictureBox4.Image = blueImage;
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
