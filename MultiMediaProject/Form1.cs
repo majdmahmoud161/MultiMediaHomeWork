@@ -13,6 +13,28 @@ namespace MultiMediaProject
 
         Bitmap originalImage;
 
+        private PictureBox pictureBoxCube;
+        private PictureBox pictureBoxHsv;
+        private PictureBox pictureBoxYCrCb;
+
+
+        private Bitmap hsvBitmapCache;
+        private Bitmap ycrcbBitmapCache;
+
+
+
+        private Bitmap cubeBitmapCache;
+
+        private const int cubeSize = 12;
+
+
+        private double angleX = 0.45;
+        private double angleY = 0.65;
+        private double zoomScale = 0.35;
+        private bool isDragging = false;
+        private Point lastMousePosition;
+
+
         public Form1()
         {
             InitializeComponent();
@@ -190,7 +212,7 @@ namespace MultiMediaProject
                 {
                     Color pixel = originalImage.GetPixel(x, y);
 
-                    
+
                     int r = pixel.R + brightness;
                     int g = pixel.G + brightness;
                     int b = pixel.B + brightness;
@@ -210,20 +232,20 @@ namespace MultiMediaProject
 
         private void button8_Click(object sender, EventArgs e)
         {
-            
+
             Bitmap redImage = new Bitmap(originalImage.Width, originalImage.Height);
             Bitmap greenImage = new Bitmap(originalImage.Width, originalImage.Height);
             Bitmap blueImage = new Bitmap(originalImage.Width, originalImage.Height);
 
-            
+
             for (int y = 0; y < originalImage.Height; y++)
             {
                 for (int x = 0; x < originalImage.Width; x++)
                 {
-                  
+
                     Color pixel = originalImage.GetPixel(x, y);
 
-                  
+
                     int r = pixel.R;
                     int g = pixel.G;
                     int b = pixel.B;
@@ -232,14 +254,14 @@ namespace MultiMediaProject
                     Color greenColor = Color.FromArgb(0, g, 0);
                     Color blueColor = Color.FromArgb(0, 0, b);
 
-              
+
                     redImage.SetPixel(x, y, redColor);
                     greenImage.SetPixel(x, y, greenColor);
                     blueImage.SetPixel(x, y, blueColor);
                 }
             }
 
-         
+
             pictureBox2.Image = redImage;
             pictureBox3.Image = greenImage;
             pictureBox4.Image = blueImage;
@@ -259,5 +281,527 @@ namespace MultiMediaProject
         {
 
         }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+            pictureBoxCube = new PictureBox
+            {
+                Dock = DockStyle.Fill,
+                BackColor = Color.Black
+            };
+            panel1.Controls.Add(pictureBoxCube);
+
+            pictureBoxCube.MouseDown += PictureBoxCube_MouseDown;
+
+            pictureBoxCube.MouseMove += PictureBoxCube_MouseMove;
+            pictureBoxCube.MouseUp += PictureBoxCube_MouseUp;
+            pictureBoxCube.MouseWheel += PictureBoxCube_MouseWheel;
+
+
+            pictureBoxCube.MouseClick += PictureBoxCube_MouseClick;
+
+
+            RenderCubeInPanel();
+        }
+
+        private void PictureBoxCube_MouseDown(object sender, MouseEventArgs e)
+        {
+
+            if (e.Button == MouseButtons.Left)
+            {
+                isDragging = true;
+                lastMousePosition = e.Location;
+            }
+        }
+
+        private void PictureBoxCube_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging)
+            {
+
+                int deltaX = e.X - lastMousePosition.X;
+                int deltaY = e.Y - lastMousePosition.Y;
+
+
+                angleY += deltaX / 200.0;
+                angleX += deltaY / 200.0;
+
+
+                lastMousePosition = e.Location;
+
+
+                RenderCubeInPanel();
+
+                RenderYCrCbShape();
+
+                RenderHSVCylinder();
+            }
+        }
+
+        private void PictureBoxCube_MouseUp(object sender, MouseEventArgs e)
+        {
+
+            if (e.Button == MouseButtons.Left)
+            {
+                isDragging = false;
+            }
+        }
+
+        private void PictureBoxCube_MouseWheel(object sender, MouseEventArgs e)
+        {
+
+            if (e.Delta > 0)
+                zoomScale += 0.03;
+            else
+                zoomScale -= 0.03;
+
+
+            if (zoomScale < 0.1) zoomScale = 0.1;
+            if (zoomScale > 1.0) zoomScale = 1.0;
+
+
+            RenderCubeInPanel();
+
+            RenderHSVCylinder();
+
+            RenderYCrCbShape();
+        }
+        private void RenderCubeInPanel()
+        {
+
+            int width = panel1.Width;
+            int height = panel1.Height;
+
+            using (Image<Bgr, byte> canvas = new Image<Bgr, byte>(width, height, new Bgr(0, 0, 0)))
+            {
+                int centerX = width / 2;
+                int centerY = height / 2;
+                double scale = width * 0.35;
+
+                double cosX = Math.Cos(angleX), sinX = Math.Sin(angleX);
+                double cosY = Math.Cos(angleY), sinY = Math.Sin(angleY);
+
+
+                for (int r = 0; r < cubeSize; r++)
+                {
+                    for (int g = 0; g < cubeSize; g++)
+                    {
+                        for (int b = 0; b < cubeSize; b++)
+                        {
+
+                            double x = (double)r / (cubeSize - 1) - 0.5;
+                            double y = (double)g / (cubeSize - 1) - 0.5;
+                            double z = (double)b / (cubeSize - 1) - 0.5;
+
+
+                            double y1 = y * cosX - z * sinX;
+                            double z1 = y * sinX + z * cosX;
+
+                            double x2 = x * cosY + z1 * sinY;
+                            double z2 = -x * sinY + z1 * cosY;
+
+
+                            double distance = 2.0;
+                            double projectionScale = scale / (distance + z2);
+
+                            int screenX = centerX + (int)(x2 * projectionScale);
+                            int screenY = centerY + (int)(y1 * projectionScale);
+
+
+                            byte colorR = (byte)(r * 255 / (cubeSize - 1));
+                            byte colorG = (byte)(g * 255 / (cubeSize - 1));
+                            byte colorB = (byte)(b * 255 / (cubeSize - 1));
+
+
+                            if (screenX >= 0 && screenX < canvas.Width && screenY >= 0 && screenY < canvas.Height)
+                            {
+                                CvInvoke.Circle(canvas, new Point(screenX, screenY), 2, new MCvScalar(colorB, colorG, colorR), -1);
+                            }
+                        }
+                    }
+
+                }
+                if (cubeBitmapCache != null) cubeBitmapCache.Dispose();
+                cubeBitmapCache = canvas.ToBitmap();
+
+                pictureBoxCube.Image = cubeBitmapCache;
+                pictureBoxCube.Image = canvas.ToBitmap();
+            }
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+            pictureBoxHsv = new PictureBox
+            {
+                Dock = DockStyle.Fill,
+                BackColor = Color.Black
+            }
+           ;
+            panel2.Controls.Add(pictureBoxHsv);
+
+            pictureBoxHsv.MouseDown += PictureBoxCube_MouseDown;
+
+            pictureBoxHsv.MouseMove += PictureBoxCube_MouseMove;
+            pictureBoxHsv.MouseUp += PictureBoxCube_MouseUp;
+            pictureBoxHsv.MouseWheel += PictureBoxCube_MouseWheel;
+
+            pictureBoxHsv.MouseClick += PictureBoxHsv_MouseClick;
+
+            RenderHSVCylinder();
+        }
+
+        private void RenderHSVCylinder()
+        {
+            int width = panel2.Width;
+            int height = panel2.Height;
+            if (width <= 0 || height <= 0) return;
+
+            using (Image<Bgr, byte> canvas = new Image<Bgr, byte>(width, height, new Bgr(0, 0, 0)))
+            {
+                int centerX = width / 2;
+                int centerY = height / 2;
+                double scale = width * zoomScale;
+                double cosX = Math.Cos(angleX), sinX = Math.Sin(angleX);
+                double cosY = Math.Cos(angleY), sinY = Math.Sin(angleY);
+
+
+                int hSteps = 30;
+                int sSteps = 6;
+                int vSteps = 8;
+
+                for (int v = 0; v < vSteps; v++)
+                {
+                    for (int s = 0; s < sSteps; s++)
+                    {
+                        for (int h = 0; h < hSteps; h++)
+                        {
+                            double hue = (double)h / hSteps * 360.0;
+                            double sat = (double)s / (sSteps - 1);
+                            double val = (double)v / (vSteps - 1);
+
+
+                            double angleRad = hue * Math.PI / 180.0;
+                            double radius = sat * 0.5;
+
+                            double x = radius * Math.Cos(angleRad);
+                            double z = radius * Math.Sin(angleRad);
+                            double y = val - 0.5;
+
+
+                            double y1 = y * cosX - z * sinX;
+                            double z1 = y * sinX + z * cosX;
+                            double x2 = x * cosY + z1 * sinY;
+                            double z2 = -x * sinY + z1 * cosY;
+
+                            double distance = 2.0;
+                            double projectionScale = scale / (distance + z2);
+                            int screenX = centerX + (int)(x2 * projectionScale);
+                            int screenY = centerY + (int)(y1 * projectionScale);
+
+
+                            using (Image<Hsv, byte> hsvPixel = new Image<Hsv, byte>(1, 1, new Hsv(hue / 2.0, sat * 255.0, val * 255.0)))
+                            using (Image<Bgr, byte> bgrPixel = hsvPixel.Convert<Bgr, byte>())
+                            {
+                                Bgr color = bgrPixel[0, 0];
+
+
+                                if (screenX >= 0 && screenX < canvas.Width && screenY >= 0 && screenY < canvas.Height)
+                                {
+                                    CvInvoke.Circle(canvas, new Point(screenX, screenY), 2, new MCvScalar(color.Blue, color.Green, color.Red), -1);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (hsvBitmapCache != null) hsvBitmapCache.Dispose();
+                hsvBitmapCache = canvas.ToBitmap();
+
+                pictureBoxHsv.Image = hsvBitmapCache;
+
+                pictureBoxHsv.Image = canvas.ToBitmap();
+            }
+        }
+
+        private void panel3_Paint(object sender, PaintEventArgs e)
+        {
+            pictureBoxYCrCb = new PictureBox { Dock = DockStyle.Fill, BackColor = Color.Black };
+            panel3.Controls.Add(pictureBoxYCrCb);
+
+
+            pictureBoxYCrCb.MouseDown += PictureBoxCube_MouseDown;
+
+            pictureBoxYCrCb.MouseMove += PictureBoxCube_MouseMove;
+            pictureBoxYCrCb.MouseUp += PictureBoxCube_MouseUp;
+            pictureBoxYCrCb.MouseWheel += PictureBoxCube_MouseWheel;
+
+            pictureBoxYCrCb.MouseClick += PictureBoxYCrCb_MouseClick;
+
+            RenderYCrCbShape();
+        }
+
+        private void RenderYCrCbShape()
+        {
+            int width = panel3.Width;
+            int height = panel3.Height;
+            if (width <= 0 || height <= 0) return;
+
+            using (Image<Bgr, byte> canvas = new Image<Bgr, byte>(width, height, new Bgr(0, 0, 0)))
+            {
+                int centerX = width / 2;
+                int centerY = height / 2;
+                double scale = width * zoomScale;
+
+
+                double cosX = Math.Cos(angleX), sinX = Math.Sin(angleX);
+                double cosY = Math.Cos(angleY), sinY = Math.Sin(angleY);
+
+
+                int ySteps = 10;
+                int cbSteps = 10;
+                int crSteps = 10;
+
+                for (int yIdx = 0; yIdx < ySteps; yIdx++)
+                {
+                    for (int cbIdx = 0; cbIdx < cbSteps; cbIdx++)
+                    {
+                        for (int crIdx = 0; crIdx < crSteps; crIdx++)
+                        {
+
+                            byte yVal = (byte)(yIdx * 255 / (ySteps - 1));
+                            byte cbVal = (byte)(cbIdx * 255 / (cbSteps - 1));
+                            byte crVal = (byte)(crIdx * 255 / (crSteps - 1));
+
+
+                            double x = (double)cbIdx / (cbSteps - 1) - 0.5;
+                            double z = (double)crIdx / (crSteps - 1) - 0.5;
+                            double y = (double)yIdx / (ySteps - 1) - 0.5;
+
+
+                            double y1 = y * cosX - z * sinX;
+                            double z1 = y * sinX + z * cosX;
+                            double x2 = x * cosY + z1 * sinY;
+                            double z2 = -x * sinY + z1 * cosY;
+
+                            double distance = 2.0;
+                            double projectionScale = scale / (distance + z2);
+                            int screenX = centerX + (int)(x2 * projectionScale);
+                            int screenY = centerY + (int)(y1 * projectionScale);
+
+
+                            using (Image<Ycc, byte> yccPixel = new Image<Ycc, byte>(1, 1, new Ycc(yVal, crVal, cbVal)))
+                            using (Image<Bgr, byte> bgrPixel = yccPixel.Convert<Bgr, byte>())
+                            {
+                                Bgr color = bgrPixel[0, 0];
+
+
+                                if (color.Blue == 0 && color.Green == 0 && color.Red == 0 && (yVal > 0 && yVal < 255))
+                                    continue;
+
+                                if (screenX >= 0 && screenX < canvas.Width && screenY >= 0 && screenY < canvas.Height)
+                                {
+                                    CvInvoke.Circle(canvas, new Point(screenX, screenY), 2, new MCvScalar(color.Blue, color.Green, color.Red), -1);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (ycrcbBitmapCache != null) ycrcbBitmapCache.Dispose();
+                ycrcbBitmapCache = canvas.ToBitmap();
+
+                pictureBoxYCrCb.Image = ycrcbBitmapCache;
+                pictureBoxYCrCb.Image = canvas.ToBitmap();
+            }
+        }
+        private void PictureBoxYCrCb_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (ycrcbBitmapCache == null) return;
+
+
+            if (e.X >= 0 && e.X < ycrcbBitmapCache.Width && e.Y >= 0 && e.Y < ycrcbBitmapCache.Height)
+            {
+
+                Color clickedColor = ycrcbBitmapCache.GetPixel(e.X, e.Y);
+
+
+                if (clickedColor.R == 0 && clickedColor.G == 0 && clickedColor.B == 0)
+                {
+                    return;
+                }
+
+
+                label1.Text = $"RGB → ({clickedColor.R}, {clickedColor.G}, {clickedColor.B})";
+
+
+                float hue = clickedColor.GetHue();
+                float saturation = clickedColor.GetSaturation();
+                float value = Math.Max(clickedColor.R, Math.Max(clickedColor.G, clickedColor.B)) / 255f;
+
+                int satPercent = (int)(saturation * 100);
+                int valPercent = (int)(value * 100);
+
+                label2.Text = $"HSV → ({(int)hue}, {satPercent}%, {valPercent}%)";
+
+
+                using (Image<Bgr, byte> bgrImage = new Image<Bgr, byte>(1, 1, new Bgr(clickedColor.B, clickedColor.G, clickedColor.R)))
+                using (Image<Ycc, byte> yccImage = bgrImage.Convert<Ycc, byte>())
+                {
+                    byte yVal = yccImage.Data[0, 0, 0];
+                    byte crVal = yccImage.Data[0, 0, 1];
+                    byte cbVal = yccImage.Data[0, 0, 2];
+
+                    label3.Text = $"YCrCb → ({yVal}, {crVal}, {cbVal})";
+                }
+            }
+        }
+
+        private void PictureBoxCube_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (cubeBitmapCache == null) return;
+
+
+            if (e.X >= 0 && e.X < cubeBitmapCache.Width && e.Y >= 0 && e.Y < cubeBitmapCache.Height)
+            {
+
+                Color clickedColor = cubeBitmapCache.GetPixel(e.X, e.Y);
+
+
+                if (clickedColor.R == 0 && clickedColor.G == 0 && clickedColor.B == 0)
+                {
+                    return;
+                }
+
+                label1.Text = $"RGB → ({clickedColor.R}, {clickedColor.G}, {clickedColor.B})";
+
+
+                float hue = clickedColor.GetHue();
+                float saturation = clickedColor.GetSaturation();
+                float value = Math.Max(clickedColor.R, Math.Max(clickedColor.G, clickedColor.B)) / 255f;
+
+                int satPercent = (int)(saturation * 100);
+                int valPercent = (int)(value * 100);
+
+                label2.Text = $"HSV → ({(int)hue}, {satPercent}%, {valPercent}%)";
+
+
+                using (Image<Bgr, byte> bgrImage = new Image<Bgr, byte>(1, 1, new Bgr(clickedColor.B, clickedColor.G, clickedColor.R)))
+                using (Image<Ycc, byte> yccImage = bgrImage.Convert<Ycc, byte>())
+                {
+
+                    byte yVal = yccImage.Data[0, 0, 0];
+                    byte crVal = yccImage.Data[0, 0, 1];
+                    byte cbVal = yccImage.Data[0, 0, 2];
+
+                    label3.Text = $"YCrCb → ({yVal}, {crVal}, {cbVal})";
+                }
+            }
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+        private void PictureBoxHsv_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (hsvBitmapCache == null) return;
+
+
+            if (e.X >= 0 && e.X < hsvBitmapCache.Width && e.Y >= 0 && e.Y < hsvBitmapCache.Height)
+            {
+
+                Color clickedColor = hsvBitmapCache.GetPixel(e.X, e.Y);
+
+                if (clickedColor.R == 0 && clickedColor.G == 0 && clickedColor.B == 0)
+                {
+                    return;
+                }
+
+
+                float hue = clickedColor.GetHue();
+                float saturation = clickedColor.GetSaturation();
+                float value = Math.Max(clickedColor.R, Math.Max(clickedColor.G, clickedColor.B)) / 255f;
+
+                int satPercent = (int)(saturation * 100);
+                int valPercent = (int)(value * 100);
+
+                label1.Text = $"HSV → ({(int)hue}, {satPercent}%, {valPercent}%)";
+
+
+                label2.Text = $"RGB → ({clickedColor.R}, {clickedColor.G}, {clickedColor.B})";
+
+
+                using (Image<Bgr, byte> bgrImage = new Image<Bgr, byte>(1, 1, new Bgr(clickedColor.B, clickedColor.G, clickedColor.R)))
+                using (Image<Ycc, byte> yccImage = bgrImage.Convert<Ycc, byte>())
+                {
+                    byte yVal = yccImage.Data[0, 0, 0];
+                    byte crVal = yccImage.Data[0, 0, 1];
+                    byte cbVal = yccImage.Data[0, 0, 2];
+
+                    label3.Text = $"YCrCb → ({yVal}, {crVal}, {cbVal})";
+                }
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            Mat matImage = originalImage.ToMat();
+
+            int width = matImage.Width;
+            int height = matImage.Height;
+            long totalPixels = matImage.Total;
+            int channels = matImage.NumberOfChannels;
+            var depth = matImage.Depth;
+
+            double sizeInMB = (double)(width * height * channels) / (1024 * 1024);
+
+            string colorSpaceInfo = " ";
+            if (channels == 1)
+                colorSpaceInfo = "(Grayscale / 1-Channel)";
+            else if (channels == 3)
+                colorSpaceInfo = " (RGB / BGR - 3 Channels)";
+            else if (channels == 4)
+                colorSpaceInfo = " (RGBA / BGRA - 4 Channels)";
+
+            string infoMessage = $" Image Information :**\n\n" +
+                                 $" Resolution : {width} × {height} Pixel\n" +
+                                 $"Total Pixel : {totalPixels:N0} Pisel\n" +
+                                 $"Nomber of Color Channel : {channels} channel\n" +
+                                 $"Defult Color System : {colorSpaceInfo}\n" +
+                                 $" Depth : {depth} bits/channel\n" +
+                                 $" Memory : {sizeInMB:F2} (MB)";
+
+            MessageBox.Show(infoMessage, "  Picture Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        }
+
+        private void button9_Click_1(object sender, EventArgs e)
+        {
+
+            pictureBox1.Image = originalImage;
+
+
+            label1.Text = "RGB → (-, -, -)";
+            label2.Text = "HSV → (-, -%, -%)";
+            label3.Text = "YCrCb → (-, -, -)";
+
+
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
+
