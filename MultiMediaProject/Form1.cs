@@ -30,7 +30,7 @@ namespace MultiMediaProject
 
         private double angleX = 0.45;
         private double angleY = 0.65;
-        private double zoomScale = 0.35;
+        private double zoomScale = 0.80;
         private bool isDragging = false;
         private Point lastMousePosition;
 
@@ -355,11 +355,6 @@ namespace MultiMediaProject
             else
                 zoomScale -= 0.03;
 
-
-            if (zoomScale < 0.1) zoomScale = 0.1;
-            if (zoomScale > 1.0) zoomScale = 1.0;
-
-
             RenderCubeInPanel();
 
             RenderHSVCylinder();
@@ -376,7 +371,7 @@ namespace MultiMediaProject
             {
                 int centerX = width / 2;
                 int centerY = height / 2;
-                double scale = width * 0.35;
+                double scale = width * zoomScale;
 
                 double cosX = Math.Cos(angleX), sinX = Math.Sin(angleX);
                 double cosY = Math.Cos(angleY), sinY = Math.Sin(angleY);
@@ -454,7 +449,7 @@ namespace MultiMediaProject
         {
             int width = panel2.Width;
             int height = panel2.Height;
-            if (width <= 0 || height <= 0) return;
+           
 
             using (Image<Bgr, byte> canvas = new Image<Bgr, byte>(width, height, new Bgr(0, 0, 0)))
             {
@@ -543,7 +538,7 @@ namespace MultiMediaProject
         {
             int width = panel3.Width;
             int height = panel3.Height;
-            if (width <= 0 || height <= 0) return;
+            
 
             using (Image<Bgr, byte> canvas = new Image<Bgr, byte>(width, height, new Bgr(0, 0, 0)))
             {
@@ -801,7 +796,43 @@ namespace MultiMediaProject
         private void button10_Click(object sender, EventArgs e)
         {
 
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "صورة PNG (*.png)|*.png|صورة JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|صورة بيتماب (*.bmp)|*.bmp";
+                saveFileDialog.Title = "Choose File Location";
+                saveFileDialog.FileName = "Picture"; 
+
+               
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                     
+                        System.Drawing.Imaging.ImageFormat format = System.Drawing.Imaging.ImageFormat.Png;
+                        string extension = System.IO.Path.GetExtension(saveFileDialog.FileName).ToLower();
+
+                        if (extension == ".jpg" || extension == ".jpeg")
+                        {
+                            format = System.Drawing.Imaging.ImageFormat.Jpeg;
+                        }
+                        else if (extension == ".bmp")
+                        {
+                            format = System.Drawing.Imaging.ImageFormat.Bmp;
+                        }
+
+                       
+                        pictureBox1.Image.Save(saveFileDialog.FileName, format);
+
+                       
+                        MessageBox.Show("saved ", "successfull", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                        MessageBox.Show("faild to save image " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
     }
-}
+
 
