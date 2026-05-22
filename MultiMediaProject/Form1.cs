@@ -208,15 +208,7 @@ namespace MultiMediaProject
 
                 Mat result = new Mat();
 
-<<<<<<< HEAD
                 int brightness = trackBar1.Value;
-=======
-
-                    int r = pixel.R + brightness;
-                    int g = pixel.G + brightness;
-                    int b = pixel.B + brightness;
->>>>>>> 284e6b8965140cc3748d480a81a844fb2ea165f3
-
                // تعديل السطوع بسرعة
                 img.ConvertTo(result, DepthType.Cv8U, 1, brightness);
 
@@ -225,7 +217,7 @@ namespace MultiMediaProject
 
         private void button8_Click(object sender, EventArgs e)
         {
-<<<<<<< HEAD
+
             if (originalImage == null) return;
 
             // 1. تحويل الصورة إلى مصفوفة Mat
@@ -233,31 +225,11 @@ namespace MultiMediaProject
 
             // 2. فصل القنوات الثلاث كصور رمادية
             Mat[] channels = bgrImage.Split();
-=======
-
-            Bitmap redImage = new Bitmap(originalImage.Width, originalImage.Height);
-            Bitmap greenImage = new Bitmap(originalImage.Width, originalImage.Height);
-            Bitmap blueImage = new Bitmap(originalImage.Width, originalImage.Height);
-
-
-            for (int y = 0; y < originalImage.Height; y++)
-            {
-                for (int x = 0; x < originalImage.Width; x++)
-                {
-
-                    Color pixel = originalImage.GetPixel(x, y);
-
-
-                    int r = pixel.R;
-                    int g = pixel.G;
-                    int b = pixel.B;
->>>>>>> 284e6b8965140cc3748d480a81a844fb2ea165f3
 
             // 3. إنشاء صورة سوداء فارغة لتعويض القنوات الملغاة
             Mat blank = new Mat(bgrImage.Size, Emgu.CV.CvEnum.DepthType.Cv8U, 1);
             blank.SetTo(new Emgu.CV.Structure.MCvScalar(0));
 
-<<<<<<< HEAD
             // --- تشكيل وعرض الصورة الحمراء (R) ---
             // OpenCV ترتيبها (B, G, R). سنضع الأحمر في مكانه والأزرق والأخضر كأصفار
             Mat redImage = new Mat();
@@ -273,19 +245,7 @@ namespace MultiMediaProject
             Mat blueImage = new Mat();
             CvInvoke.Merge(new Emgu.CV.Util.VectorOfMat(channels[0], blank, blank), blueImage);
             pictureBox4.Image = blueImage.ToBitmap();
-=======
 
-                    redImage.SetPixel(x, y, redColor);
-                    greenImage.SetPixel(x, y, greenColor);
-                    blueImage.SetPixel(x, y, blueColor);
-                }
-            }
-
-
-            pictureBox2.Image = redImage;
-            pictureBox3.Image = greenImage;
-            pictureBox4.Image = blueImage;
->>>>>>> 284e6b8965140cc3748d480a81a844fb2ea165f3
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)
