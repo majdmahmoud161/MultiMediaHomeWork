@@ -1,10 +1,11 @@
 using Emgu.CV;
+using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using System;
-using System.Windows.Forms;
 using System.IO;
-using Emgu.CV.CvEnum;
-
+using System.Reflection.Emit;
+using System.Windows.Forms;
+using Emgu.CV.Util;
 
 namespace MultiMediaProject
 {
@@ -159,90 +160,69 @@ namespace MultiMediaProject
 
         private void button7_Click(object sender, EventArgs e)
         {
-            Bitmap newImage = new Bitmap(originalImage.Width, originalImage.Height);
+            if (originalImage == null) return;
 
-            for (int y = 0; y < originalImage.Height; y++)
-            {
-                for (int x = 0; x < originalImage.Width; x++)
-                {
+            Mat bgrImage = originalImage.ToMat();
 
-                    Color pixel = originalImage.GetPixel(x, y);
+            Mat[] channels = bgrImage.Split();
 
-                    //Color newColor = Color.FromArgb(pixel.R, 0, pixel.B);
-                    Color newColor = Color.FromArgb(0, pixel.G, pixel.B);
-                    //Color newColor = Color.FromArgb(pixel.R,pixel.G , 0);
+            // حذف الأزرق
+            //channels[0].SetTo(new MCvScalar(0));
+            //channels[1].SetTo(new MCvScalar(0));
+            channels[2].SetTo(new MCvScalar(0));
 
-                    newImage.SetPixel(x, y, newColor);
-                }
-            }
-            pictureBox1.Image = newImage;
+            Mat result = new Mat();
+
+            CvInvoke.Merge(new Emgu.CV.Util.VectorOfMat(channels), result);
+
+            pictureBox1.Image = result.ToBitmap();
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
-        {
-            Bitmap brightImage = new Bitmap(originalImage.Width, originalImage.Height);
+        { 
+            if (originalImage == null) return;
 
-            int brightness = trackBar1.Value;
+                Mat img = originalImage.ToMat();
 
-            for (int y = 0; y < originalImage.Height; y++)
-            {
-                for (int x = 0; x < originalImage.Width; x++)
-                {
-                    Color pixel = originalImage.GetPixel(x, y);
+                Mat result = new Mat();
 
-                    
-                    int r = pixel.R + brightness;
-                    int g = pixel.G + brightness;
-                    int b = pixel.B + brightness;
+                int brightness = trackBar1.Value;
 
-                    r = Math.Max(0, Math.Min(255, r));
-                    g = Math.Max(0, Math.Min(255, g));
-                    b = Math.Max(0, Math.Min(255, b));
+               // تعديل السطوع بسرعة
+                img.ConvertTo(result, DepthType.Cv8U, 1, brightness);
 
-                    Color newColor = Color.FromArgb(r, g, b);
-
-                    brightImage.SetPixel(x, y, newColor);
-                }
-            }
-
-            pictureBox1.Image = brightImage;
+                pictureBox1.Image = result.ToBitmap();
         }
 
         private void button8_Click(object sender, EventArgs e)
         {
-            
-            Bitmap redImage = new Bitmap(originalImage.Width, originalImage.Height);
-            Bitmap greenImage = new Bitmap(originalImage.Width, originalImage.Height);
-            Bitmap blueImage = new Bitmap(originalImage.Width, originalImage.Height);
+            if (originalImage == null) return;
 
-            
-            for (int y = 0; y < originalImage.Height; y++)
-            {
-                for (int x = 0; x < originalImage.Width; x++)
-                {
-                  
-                    Color pixel = originalImage.GetPixel(x, y);
+            // 1. تحويل الصورة إلى مصفوفة Mat
+            Mat bgrImage = originalImage.ToMat();
 
-                  
-                    int r = pixel.R;
-                    int g = pixel.G;
-                    int b = pixel.B;
+            // 2. فصل القنوات الثلاث كصور رمادية
+            Mat[] channels = bgrImage.Split();
 
-                    Color redColor = Color.FromArgb(r, 0, 0);
-                    Color greenColor = Color.FromArgb(0, g, 0);
-                    Color blueColor = Color.FromArgb(0, 0, b);
+            // 3. إنشاء صورة سوداء فارغة لتعويض القنوات الملغاة
+            Mat blank = new Mat(bgrImage.Size, Emgu.CV.CvEnum.DepthType.Cv8U, 1);
+            blank.SetTo(new Emgu.CV.Structure.MCvScalar(0));
 
-              
-                    redImage.SetPixel(x, y, redColor);
-                    greenImage.SetPixel(x, y, greenColor);
-                    blueImage.SetPixel(x, y, blueColor);
-                }
-            }
+            // --- تشكيل وعرض الصورة الحمراء (R) ---
+            // OpenCV ترتيبها (B, G, R). سنضع الأحمر في مكانه والأزرق والأخضر كأصفار
+            Mat redImage = new Mat();
+            CvInvoke.Merge(new Emgu.CV.Util.VectorOfMat(blank, blank, channels[2]), redImage);
+            pictureBox2.Image = redImage.ToBitmap();
 
-         
-            pictureBox2.Image = redImage;
-            pictureBox3.Image = greenImage;
-            pictureBox4.Image = blueImage;
+            // --- تشكيل وعرض الصورة الخضراء (G) ---
+            Mat greenImage = new Mat();
+            CvInvoke.Merge(new Emgu.CV.Util.VectorOfMat(blank, channels[1], blank), greenImage);
+            pictureBox3.Image = greenImage.ToBitmap();
+
+            // --- تشكيل وعرض الصورة الزرقاء (B) ---
+            Mat blueImage = new Mat();
+            CvInvoke.Merge(new Emgu.CV.Util.VectorOfMat(channels[0], blank, blank), blueImage);
+            pictureBox4.Image = blueImage.ToBitmap();
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)

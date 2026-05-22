@@ -152,6 +152,7 @@
             pictureBox2.Location = new Point(515, 28);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(228, 148);
+            pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox2.TabIndex = 10;
             pictureBox2.TabStop = false;
             pictureBox2.Click += pictureBox2_Click;
@@ -161,6 +162,7 @@
             pictureBox3.Location = new Point(515, 192);
             pictureBox3.Name = "pictureBox3";
             pictureBox3.Size = new Size(228, 154);
+            pictureBox3.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox3.TabIndex = 11;
             pictureBox3.TabStop = false;
             pictureBox3.Click += pictureBox3_Click;
@@ -170,6 +172,7 @@
             pictureBox4.Location = new Point(515, 363);
             pictureBox4.Name = "pictureBox4";
             pictureBox4.Size = new Size(228, 153);
+            pictureBox4.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox4.TabIndex = 12;
             pictureBox4.TabStop = false;
             pictureBox4.Click += pictureBox4_Click;
