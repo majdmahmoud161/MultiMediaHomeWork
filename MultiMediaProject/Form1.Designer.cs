@@ -163,11 +163,7 @@
             pictureBox2.Location = new Point(724, 8);
             pictureBox2.Margin = new Padding(4, 5, 4, 5);
             pictureBox2.Name = "pictureBox2";
-<<<<<<< HEAD
             pictureBox2.Size = new Size(228, 148);
-=======
-            pictureBox2.Size = new Size(211, 181);
->>>>>>> 284e6b8965140cc3748d480a81a844fb2ea165f3
             pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox2.TabIndex = 10;
             pictureBox2.TabStop = false;
@@ -178,11 +174,7 @@
             pictureBox3.Location = new Point(724, 223);
             pictureBox3.Margin = new Padding(4, 5, 4, 5);
             pictureBox3.Name = "pictureBox3";
-<<<<<<< HEAD
             pictureBox3.Size = new Size(228, 154);
-=======
-            pictureBox3.Size = new Size(211, 183);
->>>>>>> 284e6b8965140cc3748d480a81a844fb2ea165f3
             pictureBox3.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox3.TabIndex = 11;
             pictureBox3.TabStop = false;
@@ -193,11 +185,7 @@
             pictureBox4.Location = new Point(724, 436);
             pictureBox4.Margin = new Padding(4, 5, 4, 5);
             pictureBox4.Name = "pictureBox4";
-<<<<<<< HEAD
             pictureBox4.Size = new Size(228, 153);
-=======
-            pictureBox4.Size = new Size(211, 169);
->>>>>>> 284e6b8965140cc3748d480a81a844fb2ea165f3
             pictureBox4.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox4.TabIndex = 12;
             pictureBox4.TabStop = false;
@@ -212,6 +200,7 @@
             button8.TabIndex = 13;
             button8.Text = "button8";
             button8.UseVisualStyleBackColor = true;
+
             button8.Click += button8_Click;
             // 
             // panel1
