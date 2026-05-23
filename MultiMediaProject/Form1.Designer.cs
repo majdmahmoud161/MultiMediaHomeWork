@@ -35,7 +35,6 @@
             button3 = new Button();
             button5 = new Button();
             button6 = new Button();
-            button7 = new Button();
             trackBar1 = new TrackBar();
             pictureBox2 = new PictureBox();
             pictureBox3 = new PictureBox();
@@ -50,6 +49,9 @@
             ImageInfo = new Button();
             button9 = new Button();
             button10 = new Button();
+            checkBox1 = new CheckBox();
+            checkBox2 = new CheckBox();
+            checkBox3 = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
@@ -59,10 +61,10 @@
             // 
             // button1
             // 
-            button1.Location = new Point(1426, 12);
-            button1.Margin = new Padding(4, 3, 4, 3);
+            button1.Location = new Point(998, 7);
+            button1.Margin = new Padding(3, 2, 3, 2);
             button1.Name = "button1";
-            button1.Size = new Size(214, 75);
+            button1.Size = new Size(150, 45);
             button1.TabIndex = 0;
             button1.Text = "UploadImage";
             button1.UseVisualStyleBackColor = true;
@@ -70,10 +72,10 @@
             // 
             // pictureBox1
             // 
-            pictureBox1.Location = new Point(7, 8);
-            pictureBox1.Margin = new Padding(4, 3, 4, 3);
+            pictureBox1.Location = new Point(5, 5);
+            pictureBox1.Margin = new Padding(3, 2, 3, 2);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(697, 597);
+            pictureBox1.Size = new Size(488, 358);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 1;
             pictureBox1.TabStop = false;
@@ -83,10 +85,10 @@
             // 
             // button2
             // 
-            button2.Location = new Point(1426, 106);
-            button2.Margin = new Padding(4, 3, 4, 3);
+            button2.Location = new Point(998, 64);
+            button2.Margin = new Padding(3, 2, 3, 2);
             button2.Name = "button2";
-            button2.Size = new Size(214, 74);
+            button2.Size = new Size(150, 44);
             button2.TabIndex = 2;
             button2.Text = "RGB_To_HSV";
             button2.UseVisualStyleBackColor = true;
@@ -94,10 +96,10 @@
             // 
             // button4
             // 
-            button4.Location = new Point(1150, 12);
-            button4.Margin = new Padding(4, 3, 4, 3);
+            button4.Location = new Point(805, 7);
+            button4.Margin = new Padding(3, 2, 3, 2);
             button4.Name = "button4";
-            button4.Size = new Size(214, 77);
+            button4.Size = new Size(150, 46);
             button4.TabIndex = 4;
             button4.Text = "RGB_To_YCBCR";
             button4.UseVisualStyleBackColor = true;
@@ -105,10 +107,10 @@
             // 
             // button3
             // 
-            button3.Location = new Point(1150, 223);
-            button3.Margin = new Padding(4, 3, 4, 3);
+            button3.Location = new Point(805, 134);
+            button3.Margin = new Padding(3, 2, 3, 2);
             button3.Name = "button3";
-            button3.Size = new Size(214, 68);
+            button3.Size = new Size(150, 41);
             button3.TabIndex = 5;
             button3.Text = "RGB_To_LAB";
             button3.UseVisualStyleBackColor = true;
@@ -116,10 +118,10 @@
             // 
             // button5
             // 
-            button5.Location = new Point(1150, 106);
-            button5.Margin = new Padding(4, 3, 4, 3);
+            button5.Location = new Point(805, 64);
+            button5.Margin = new Padding(3, 2, 3, 2);
             button5.Name = "button5";
-            button5.Size = new Size(214, 73);
+            button5.Size = new Size(150, 44);
             button5.TabIndex = 6;
             button5.Text = "RGB_To_YUV";
             button5.UseVisualStyleBackColor = true;
@@ -127,43 +129,30 @@
             // 
             // button6
             // 
-            button6.Location = new Point(1426, 223);
-            button6.Margin = new Padding(4, 3, 4, 3);
+            button6.Location = new Point(998, 134);
+            button6.Margin = new Padding(3, 2, 3, 2);
             button6.Name = "button6";
-            button6.Size = new Size(214, 63);
+            button6.Size = new Size(150, 38);
             button6.TabIndex = 7;
             button6.Text = "RGB_To_CMYK";
             button6.UseVisualStyleBackColor = true;
             button6.Click += button6_Click;
             // 
-            // button7
-            // 
-            button7.Location = new Point(1426, 324);
-            button7.Margin = new Padding(4, 5, 4, 5);
-            button7.Name = "button7";
-            button7.Size = new Size(214, 70);
-            button7.TabIndex = 8;
-            button7.Text = "button7";
-            button7.UseVisualStyleBackColor = true;
-            button7.Click += button7_Click;
-            // 
             // trackBar1
             // 
-            trackBar1.Location = new Point(1308, 436);
-            trackBar1.Margin = new Padding(4, 5, 4, 5);
+            trackBar1.Location = new Point(916, 262);
             trackBar1.Maximum = 100;
             trackBar1.Minimum = -100;
             trackBar1.Name = "trackBar1";
-            trackBar1.Size = new Size(204, 69);
+            trackBar1.Size = new Size(143, 45);
             trackBar1.TabIndex = 9;
             trackBar1.Scroll += trackBar1_Scroll;
             // 
             // pictureBox2
             // 
-            pictureBox2.Location = new Point(724, 8);
-            pictureBox2.Margin = new Padding(4, 5, 4, 5);
+            pictureBox2.Location = new Point(507, 5);
             pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(228, 148);
+            pictureBox2.Size = new Size(160, 89);
             pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox2.TabIndex = 10;
             pictureBox2.TabStop = false;
@@ -171,10 +160,9 @@
             // 
             // pictureBox3
             // 
-            pictureBox3.Location = new Point(724, 223);
-            pictureBox3.Margin = new Padding(4, 5, 4, 5);
+            pictureBox3.Location = new Point(507, 134);
             pictureBox3.Name = "pictureBox3";
-            pictureBox3.Size = new Size(228, 154);
+            pictureBox3.Size = new Size(160, 92);
             pictureBox3.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox3.TabIndex = 11;
             pictureBox3.TabStop = false;
@@ -182,10 +170,9 @@
             // 
             // pictureBox4
             // 
-            pictureBox4.Location = new Point(724, 436);
-            pictureBox4.Margin = new Padding(4, 5, 4, 5);
+            pictureBox4.Location = new Point(507, 262);
             pictureBox4.Name = "pictureBox4";
-            pictureBox4.Size = new Size(228, 153);
+            pictureBox4.Size = new Size(160, 92);
             pictureBox4.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox4.TabIndex = 12;
             pictureBox4.TabStop = false;
@@ -193,46 +180,48 @@
             // 
             // button8
             // 
-            button8.Location = new Point(1150, 324);
-            button8.Margin = new Padding(4, 5, 4, 5);
+            button8.Location = new Point(805, 194);
             button8.Name = "button8";
-            button8.Size = new Size(214, 70);
+            button8.Size = new Size(150, 42);
             button8.TabIndex = 13;
             button8.Text = "button8";
             button8.UseVisualStyleBackColor = true;
-
             button8.Click += button8_Click;
             // 
             // panel1
             // 
-            panel1.Location = new Point(12, 641);
+            panel1.Location = new Point(8, 385);
+            panel1.Margin = new Padding(2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(300, 280);
+            panel1.Size = new Size(210, 168);
             panel1.TabIndex = 14;
             panel1.Paint += panel1_Paint;
             // 
             // panel2
             // 
-            panel2.Location = new Point(340, 641);
+            panel2.Location = new Point(238, 385);
+            panel2.Margin = new Padding(2);
             panel2.Name = "panel2";
-            panel2.Size = new Size(300, 280);
+            panel2.Size = new Size(210, 168);
             panel2.TabIndex = 15;
             panel2.Paint += panel2_Paint;
             // 
             // panel3
             // 
-            panel3.Location = new Point(660, 641);
+            panel3.Location = new Point(462, 385);
+            panel3.Margin = new Padding(2);
             panel3.Name = "panel3";
-            panel3.Size = new Size(300, 280);
+            panel3.Size = new Size(210, 168);
             panel3.TabIndex = 16;
             panel3.Paint += panel3_Paint;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(1044, 641);
+            label1.Location = new Point(731, 385);
+            label1.Margin = new Padding(2, 0, 2, 0);
             label1.Name = "label1";
-            label1.Size = new Size(59, 25);
+            label1.Size = new Size(38, 15);
             label1.TabIndex = 17;
             label1.Text = "label1";
             label1.Click += label1_Click;
@@ -240,9 +229,10 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(1044, 694);
+            label2.Location = new Point(731, 416);
+            label2.Margin = new Padding(2, 0, 2, 0);
             label2.Name = "label2";
-            label2.Size = new Size(59, 25);
+            label2.Size = new Size(38, 15);
             label2.TabIndex = 18;
             label2.Text = "label2";
             label2.Click += label2_Click;
@@ -250,18 +240,20 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(1044, 744);
+            label3.Location = new Point(731, 446);
+            label3.Margin = new Padding(2, 0, 2, 0);
             label3.Name = "label3";
-            label3.Size = new Size(59, 25);
+            label3.Size = new Size(38, 15);
             label3.TabIndex = 19;
             label3.Text = "label3";
             label3.Click += label3_Click;
             // 
             // ImageInfo
             // 
-            ImageInfo.Location = new Point(1426, 610);
+            ImageInfo.Location = new Point(998, 366);
+            ImageInfo.Margin = new Padding(2);
             ImageInfo.Name = "ImageInfo";
-            ImageInfo.Size = new Size(214, 56);
+            ImageInfo.Size = new Size(150, 34);
             ImageInfo.TabIndex = 20;
             ImageInfo.Text = "ImageInfo";
             ImageInfo.UseVisualStyleBackColor = true;
@@ -269,9 +261,10 @@
             // 
             // button9
             // 
-            button9.Location = new Point(1426, 713);
+            button9.Location = new Point(998, 428);
+            button9.Margin = new Padding(2);
             button9.Name = "button9";
-            button9.Size = new Size(214, 56);
+            button9.Size = new Size(150, 34);
             button9.TabIndex = 21;
             button9.Text = "button9";
             button9.UseVisualStyleBackColor = true;
@@ -279,19 +272,56 @@
             // 
             // button10
             // 
-            button10.Location = new Point(1426, 805);
+            button10.Location = new Point(998, 483);
+            button10.Margin = new Padding(2);
             button10.Name = "button10";
-            button10.Size = new Size(214, 56);
+            button10.Size = new Size(150, 34);
             button10.TabIndex = 22;
             button10.Text = "button10";
             button10.UseVisualStyleBackColor = true;
             button10.Click += button10_Click;
             // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Location = new Point(991, 211);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(97, 19);
+            checkBox1.TabIndex = 23;
+            checkBox1.Text = "checkBoxRed";
+            checkBox1.UseVisualStyleBackColor = true;
+            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
+            // 
+            // checkBox2
+            // 
+            checkBox2.AutoSize = true;
+            checkBox2.Location = new Point(1095, 211);
+            checkBox2.Name = "checkBox2";
+            checkBox2.Size = new Size(108, 19);
+            checkBox2.TabIndex = 24;
+            checkBox2.Text = "checkBoxGreen";
+            checkBox2.UseVisualStyleBackColor = true;
+            checkBox2.CheckedChanged += checkBox2_CheckedChanged;
+            // 
+            // checkBox3
+            // 
+            checkBox3.AutoSize = true;
+            checkBox3.Location = new Point(1221, 211);
+            checkBox3.Name = "checkBox3";
+            checkBox3.Size = new Size(100, 19);
+            checkBox3.TabIndex = 25;
+            checkBox3.Text = "checkBoxBlue";
+            checkBox3.UseVisualStyleBackColor = true;
+            checkBox3.CheckedChanged += checkBox3_CheckedChanged;
+            // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1713, 933);
+            ClientSize = new Size(1282, 449);
+            Controls.Add(checkBox3);
+            Controls.Add(checkBox2);
+            Controls.Add(checkBox1);
             Controls.Add(button10);
             Controls.Add(button9);
             Controls.Add(ImageInfo);
@@ -306,7 +336,6 @@
             Controls.Add(pictureBox3);
             Controls.Add(pictureBox2);
             Controls.Add(trackBar1);
-            Controls.Add(button7);
             Controls.Add(button6);
             Controls.Add(button5);
             Controls.Add(button3);
@@ -314,9 +343,10 @@
             Controls.Add(button2);
             Controls.Add(pictureBox1);
             Controls.Add(button1);
-            Margin = new Padding(4, 3, 4, 3);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "Form1";
             Text = "Form1";
+            Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
@@ -335,7 +365,6 @@
         private Button button3;
         private Button button5;
         private Button button6;
-        private Button button7;
         private TrackBar trackBar1;
         private PictureBox pictureBox2;
         private PictureBox pictureBox3;
@@ -350,5 +379,8 @@
         private Button ImageInfo;
         private Button button9;
         private Button button10;
+        private CheckBox checkBox1;
+        private CheckBox checkBox2;
+        private CheckBox checkBox3;
     }
 }

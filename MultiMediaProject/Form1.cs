@@ -13,7 +13,7 @@ namespace MultiMediaProject
     {
 
         Bitmap originalImage;
-
+        
         private PictureBox pictureBoxCube;
         private PictureBox pictureBoxHsv;
         private PictureBox pictureBoxYCrCb;
@@ -46,12 +46,12 @@ namespace MultiMediaProject
         private void button1_Click(object sender, EventArgs e)
         {
 
+
             OpenFileDialog openfiledealog = new OpenFileDialog();
             if (openfiledealog.ShowDialog() == DialogResult.OK)
             {
                 originalImage = new Bitmap(openfiledealog.FileName);
                 pictureBox1.Image = originalImage;
-
             }
 
 
@@ -180,7 +180,23 @@ namespace MultiMediaProject
             pictureBox1.Image = cmyImage;
         }
 
-        private void button7_Click(object sender, EventArgs e)
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            ApplyChannels();
+
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            ApplyChannels();
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            ApplyChannels();
+        }
+
+        private void ApplyChannels()
         {
             if (originalImage == null) return;
 
@@ -188,10 +204,17 @@ namespace MultiMediaProject
 
             Mat[] channels = bgrImage.Split();
 
-            // حذف الأزرق
-            //channels[0].SetTo(new MCvScalar(0));
-            //channels[1].SetTo(new MCvScalar(0));
-            channels[2].SetTo(new MCvScalar(0));
+            // Blue channel
+            if (checkBox3.Checked)
+                channels[0].SetTo(new MCvScalar(0));
+
+            // Green channel
+            if (checkBox2.Checked)
+                channels[1].SetTo(new MCvScalar(0));
+
+            // Red channel
+            if (checkBox1.Checked)
+                channels[2].SetTo(new MCvScalar(0));
 
             Mat result = new Mat();
 
@@ -199,20 +222,21 @@ namespace MultiMediaProject
 
             pictureBox1.Image = result.ToBitmap();
         }
+    
 
         private void trackBar1_Scroll(object sender, EventArgs e)
-        { 
+        {
             if (originalImage == null) return;
 
-                Mat img = originalImage.ToMat();
+            Mat img = originalImage.ToMat();
 
-                Mat result = new Mat();
+            Mat result = new Mat();
 
-                int brightness = trackBar1.Value;
-               // تعديل السطوع بسرعة
-                img.ConvertTo(result, DepthType.Cv8U, 1, brightness);
+            int brightness = trackBar1.Value;
+            // تعديل السطوع بسرعة
+            img.ConvertTo(result, DepthType.Cv8U, 1, brightness);
 
-                pictureBox1.Image = result.ToBitmap();
+            pictureBox1.Image = result.ToBitmap();
         }
 
         private void button8_Click(object sender, EventArgs e)
@@ -388,6 +412,15 @@ namespace MultiMediaProject
                             byte colorG = (byte)(g * 255 / (cubeSize - 1));
                             byte colorB = (byte)(b * 255 / (cubeSize - 1));
 
+                            // حذف القنوات بشكل Real-Time
+                            if (checkBox1.Checked) // Red
+                                colorR = 0;
+
+                            if (checkBox2.Checked) // Green
+                                colorG = 0;
+
+                            if (checkBox3.Checked) // Blue
+                                colorB = 0;
 
                             if (screenX >= 0 && screenX < canvas.Width && screenY >= 0 && screenY < canvas.Height)
                             {
@@ -430,7 +463,7 @@ namespace MultiMediaProject
         {
             int width = panel2.Width;
             int height = panel2.Height;
-           
+
 
             using (Image<Bgr, byte> canvas = new Image<Bgr, byte>(width, height, new Bgr(0, 0, 0)))
             {
@@ -519,7 +552,7 @@ namespace MultiMediaProject
         {
             int width = panel3.Width;
             int height = panel3.Height;
-            
+
 
             using (Image<Bgr, byte> canvas = new Image<Bgr, byte>(width, height, new Bgr(0, 0, 0)))
             {
@@ -778,42 +811,49 @@ namespace MultiMediaProject
         {
 
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.Filter = "صورة PNG (*.png)|*.png|صورة JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|صورة بيتماب (*.bmp)|*.bmp";
-                saveFileDialog.Title = "Choose File Location";
-                saveFileDialog.FileName = "Picture"; 
+            saveFileDialog.Filter = "صورة PNG (*.png)|*.png|صورة JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|صورة بيتماب (*.bmp)|*.bmp";
+            saveFileDialog.Title = "Choose File Location";
+            saveFileDialog.FileName = "Picture";
 
-               
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
                 {
-                    try
+
+                    System.Drawing.Imaging.ImageFormat format = System.Drawing.Imaging.ImageFormat.Png;
+                    string extension = System.IO.Path.GetExtension(saveFileDialog.FileName).ToLower();
+
+                    if (extension == ".jpg" || extension == ".jpeg")
                     {
-                     
-                        System.Drawing.Imaging.ImageFormat format = System.Drawing.Imaging.ImageFormat.Png;
-                        string extension = System.IO.Path.GetExtension(saveFileDialog.FileName).ToLower();
-
-                        if (extension == ".jpg" || extension == ".jpeg")
-                        {
-                            format = System.Drawing.Imaging.ImageFormat.Jpeg;
-                        }
-                        else if (extension == ".bmp")
-                        {
-                            format = System.Drawing.Imaging.ImageFormat.Bmp;
-                        }
-
-                       
-                        pictureBox1.Image.Save(saveFileDialog.FileName, format);
-
-                       
-                        MessageBox.Show("saved ", "successfull", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        format = System.Drawing.Imaging.ImageFormat.Jpeg;
                     }
-                    catch (Exception ex)
+                    else if (extension == ".bmp")
                     {
-                        
-                        MessageBox.Show("faild to save image " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        format = System.Drawing.Imaging.ImageFormat.Bmp;
                     }
+
+
+                    pictureBox1.Image.Save(saveFileDialog.FileName, format);
+
+
+                    MessageBox.Show("saved ", "successfull", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+
+                    MessageBox.Show("faild to save image " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
     }
+
+}
 
 
