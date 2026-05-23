@@ -13,7 +13,7 @@ namespace MultiMediaProject
     {
 
         Bitmap originalImage;
-        
+
         private PictureBox pictureBoxCube;
         private PictureBox pictureBoxHsv;
         private PictureBox pictureBoxYCrCb;
@@ -222,7 +222,7 @@ namespace MultiMediaProject
 
             pictureBox1.Image = result.ToBitmap();
         }
-    
+
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
@@ -799,6 +799,15 @@ namespace MultiMediaProject
 
             pictureBox1.Image = originalImage;
 
+            pictureBox2.Image = null;
+            pictureBox3.Image = null;
+            pictureBox4.Image = null;
+
+            checkBox1.Checked = false;
+            checkBox2.Checked = false;
+            checkBox3.Checked = false;
+
+            trackBar1.Value = 0;
 
             label1.Text = "RGB → (-, -, -)";
             label2.Text = "HSV → (-, -%, -%)";
@@ -852,6 +861,25 @@ namespace MultiMediaProject
 
         }
 
+        private void button7_Click(object sender, EventArgs e)
+        {
+            Bitmap quatiZed = new Bitmap(originalImage.Width , originalImage.Height);
+            for (int i=0; i<originalImage.Height; i++)
+            {
+                for (int j=0; j<originalImage.Width; j++)
+                {
+                    Color pixel = originalImage.GetPixel(j, i);
+
+                    int r = (pixel.R/64) * 64;
+                    int g = (pixel.G / 64) * 64;
+                    int b = (pixel.B / 64) * 64;
+
+                    Color quantizColor = Color.FromArgb(r,g,b);
+                    quatiZed.SetPixel(j, i, quantizColor);
+                }
+            }
+            pictureBox1.Image = quatiZed;
+        }
     }
 
 }
